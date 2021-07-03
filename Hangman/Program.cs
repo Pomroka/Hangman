@@ -74,7 +74,6 @@ namespace Hangman
         {
             // var top3 = ReadFrom("highscore.txt");
             Console.Clear();
-            Console.WriteLine("---------|---------|---------|---------|---------|---------|---------|---------|");
             Console.WriteLine($"{"Hangman",43}");
             Console.WriteLine($"{"Game written by Ania",49}\n");
             
