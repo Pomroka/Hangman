@@ -10,7 +10,7 @@ namespace Hangman
         private const string middleRow = "╠══════╬═══════════════════╬══════════════════╬══════╬════════════════════════╣";
         private const string bottomRow = "╚══════╩═══════════════════╩══════════════════╩══════╩════════════════════════╝";
         private const string sep = "║";
-        private static string labelRow = $"{sep}{"No.",5}{sep,2}{"Player name",15}{sep,5}{"Date",11}{sep,8}{"Time",5}{sep,2}{"Word",14}{sep,11}";
+        private static string labelRow = $"{sep}{"No.",5}{sep,2}{"Player name",15}{sep,5}{"Date",11}{sep,8}{"Time",5}{sep,2}{"Capital",15}{sep,10}";
         private static string[] gallows = {
             @" ╔═╤═══╤ ",
             @" ║/    │ ",
@@ -31,7 +31,7 @@ namespace Hangman
                 if (key == '1')
                     playerName = ChangeName();
                 else if (key == '2')
-                    PlayGame();
+                    new PlayGame(playerName);
                 else if (key == '3')
                     ShowLeaderboard();
                 else if (key == 'x' || key == 'X')
@@ -46,19 +46,28 @@ namespace Hangman
             return Console.ReadLine();
         }
         
-        static void PlayGame()
-        {
-            
-        }
-        
         static void ShowLeaderboard()
         {
             
         }
-        static char GetInputKey()
+        public static char GetInputKey()
         {
             var key = Console.ReadKey(true);
             return key.KeyChar;
+        }
+        
+        public static List<string> ReadFrom(string file)
+        {
+            string line;
+            var lines = new List<string>();
+            using (var reader = File.OpenText(file))
+            {
+                while ((line = reader.ReadLine()) != null)
+                {
+                    lines.Add(line);
+                }
+            }
+            return lines;
         }
         
         static void DisplayWelcomeScreen(string player)
@@ -81,7 +90,7 @@ namespace Hangman
             Console.WriteLine($"1 - To change name{gallows[2],34}");
             Console.WriteLine($"2 - To start New Game{gallows[3],31}");
             Console.WriteLine($"3 - To view Leaderboard{gallows[4],29}");
-            Console.WriteLine($"X - To Exit{gallows[5],41}");
+            Console.WriteLine($"X - To Exit{gallows[5],41}\n");
         }
         
     }
