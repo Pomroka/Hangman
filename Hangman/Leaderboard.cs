@@ -8,7 +8,6 @@ namespace Hangman
 {
     public class Leaderboard
     {
-        public const string highscoreFile = "highscore.txt";
         private const string topRow = "╔══════╦═══════════════════╦══════════════════╦══════╦════════════════════════╗";
         private const string middleRow = "╠══════╬═══════════════════╬══════════════════╬══════╬════════════════════════╣";
         private const string bottomRow = "╚══════╩═══════════════════╩══════════════════╩══════╩════════════════════════╝";
@@ -24,7 +23,7 @@ namespace Hangman
         private void ReadHSFromFile()
         {
             
-            var lines = Program.ReadFrom(highscoreFile);
+            var lines = Program.ReadFrom(Program.highscoreFile);
             leaderboard = new List<List<string>>();
             foreach (var line in lines)
             {
@@ -34,7 +33,7 @@ namespace Hangman
         
         private static void SaveHSToFile()
         {
-            using (var writer = File.CreateText(highscoreFile))
+            using (var writer = File.CreateText(Program.highscoreFile))
             {
                 foreach (var line in leaderboard)
                 {
@@ -46,7 +45,11 @@ namespace Hangman
         public static void UpdateLeaderboard(string name, DateTime startTime, int gameTime, string capital)
         {
             leaderboard.Add(new List<string>() { name, $"{startTime:g}", $"{gameTime}", capital });
-            leaderboard.Sort( (a, b) => a[2].CompareTo(b[2]) );
+            leaderboard = leaderboard.OrderBy(row => row[2]).ThenByDescending(row => row[3].Length).ToList();
+            if (leaderboard.Count > 20)
+            {
+                leaderboard.RemoveAt(leaderboard.Count - 1);
+            }
             SaveHSToFile();
         }
         public static void ShowLeaderboard(int size = 10)

@@ -7,6 +7,7 @@ namespace Hangman
 {
     class Program
     {
+        public const string highscoreFile = "highscore.txt";
         private static string[] gallows = {
             @" ╔═╤═══╤ ",
             @" ║/    │ ",
@@ -39,7 +40,11 @@ namespace Hangman
         
         static void ViewLeaderboard()
         {
-            
+            Console.Clear();
+            Console.WriteLine($"{"Leaderboard",45}\n");
+            Leaderboard.ShowLeaderboard(20);
+            Console.WriteLine("\nPress any key to return to main menu...");
+            Console.ReadKey(false);
         }
         
         static string ChangeName()
@@ -80,7 +85,7 @@ namespace Hangman
             Console.WriteLine($"{"Hangman",43}");
             Console.WriteLine($"{"Game written by Ania",49}\n");
             
-            if (File.Exists("highscore.txt"))
+            if (File.Exists(highscoreFile))
             {
                 Console.WriteLine($"{"Top 3 games",45}");
                 Leaderboard.ShowLeaderboard(3);
