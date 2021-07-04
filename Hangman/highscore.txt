@@ -1,4 +1,5 @@
 Ania | 04.07.2021 16:31 | 13 | Vientiane
+Ania | 04.07.2021 19:30 | 17 | Nassau
 Ania | 04.07.2021 15:02 | 18 | Nairobi
 Ania | 04.07.2021 15:00 | 19 | Ottawa
 Ania | 04.07.2021 15:38 | 24 | Islamabad
@@ -17,4 +18,3 @@ Ania | 04.07.2021 14:41 | 47 | Kuala Lumpur
 MarcinVeryLongName | 26.11.2016 14:15 | 54 | Warsaw
 Ania | 04.07.2021 15:14 | 59 | Prague
 Ania | 04.07.2021 16:03 | 71 | Tripoli
-Ania | 04.07.2021 16:40 | 76 | Pristina

@@ -6,22 +6,23 @@ using System.Linq;
 
 namespace Hangman
 {
-    public class PlayGame
+    public class NewGame
     {
-        private string capital { get; }
-        private string country { get; }
-        private string playerName { get; }
-        private int playerLife { get; set; }
-        private DateTime startTime { get; }
-        private int gameTime { get; set; }
-        private List<char> guessed { get; set; }
-        private List<char> wrongLetters { get; set; }
-        private string lastGuess { get; set; }
-        private bool win { get; set; }
-        private bool done { get; set; }
-        private List<string> gallows { get; set; }
-        private int guessCount { get; set; }
-        public PlayGame(string name)
+        string capital { get; }
+        string country { get; }
+        string playerName { get; }
+        int playerLife { get; set; }
+        DateTime startTime { get; }
+        int gameTime { get; set; }
+        List<char> guessed { get; set; }
+        List<char> wrongLetters { get; set; }
+        string lastGuess { get; set; }
+        bool win { get; set; }
+        bool done { get; set; }
+        List<string> gallows { get; set; }
+        int guessCount { get; set; }
+        
+        public NewGame(string name)
         {
             this.gallows = new List<string> {
                 @"    ╔═╤═══╤ ",
@@ -43,10 +44,11 @@ namespace Hangman
             this.win = false;
             this.done = false;
             this.guessCount = 0;
-            NewGame();
+        
+            PlayGame();
         }
         
-        private void NewGame()
+        void PlayGame()
         {
             do {
                 DisplayGameScreen();
@@ -71,7 +73,7 @@ namespace Hangman
         }
         
         
-        private void GuessLetter(char letter)
+        void GuessLetter(char letter)
         {
             this.guessCount += 1;
             var capital = this.capital.ToUpper();
@@ -103,7 +105,7 @@ namespace Hangman
             }
         }
         
-        private void GuessWord(string word)
+        void GuessWord(string word)
         {
             this.guessCount += 1;
             var capital = this.capital.ToUpper();
@@ -124,7 +126,7 @@ namespace Hangman
             }
         }
         
-        private void DrawStickman()
+        void DrawStickman()
         {
             if (this.playerLife < 6)
                 this.gallows[2] = @"    ║     Ö ";
@@ -140,7 +142,7 @@ namespace Hangman
                 this.gallows[4] = @"    ║    / \";
         }
         
-        private void DisplayGameScreen()
+        void DisplayGameScreen()
         {
             string hint = ""; 
             Console.Clear();
@@ -168,12 +170,12 @@ namespace Hangman
             }
         }
         
-        private void DisplaySummary()
+        void DisplaySummary()
         {
             if (this.win)
             {
                 Console.WriteLine($"\n{"Congratulation! You won!", 52}\n");
-                Console.WriteLine($"You guesses the capital after {this.guessCount} guesses. It took you {this.gameTime} seconds.");
+                Console.WriteLine($"You guesses the capital after {this.guessCount} guesses. It took you {this.gameTime} seconds.\n");
             }
             else
             {
@@ -186,11 +188,19 @@ namespace Hangman
             Console.ReadKey(false);
         }
         
-        private string GetRandomPair()
+        string GetRandomPair()
         {
-            var pairs = Program.ReadFrom("countries_and_capitals.txt");
-            var rand = new Random();
-            return pairs[rand.Next(0, pairs.Count)];
+            try
+            {
+                var rand = new Random();
+                return Program.wordsPairs[rand.Next(0, Program.wordsPairs.Count)];
+            }
+            catch (ArgumentOutOfRangeException e)
+            {
+                // Console.WriteLine(e.Message);
+                throw new ArgumentOutOfRangeException("Words dictionary file is empty!", e);
+            }
+
         }
         
     }

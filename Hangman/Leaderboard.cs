@@ -8,11 +8,12 @@ namespace Hangman
 {
     public class Leaderboard
     {
-        private const string topRow = "╔══════╦═══════════════════╦══════════════════╦══════╦════════════════════════╗";
-        private const string middleRow = "╠══════╬═══════════════════╬══════════════════╬══════╬════════════════════════╣";
-        private const string bottomRow = "╚══════╩═══════════════════╩══════════════════╩══════╩════════════════════════╝";
-        private const string sep = "║";
-        private static string labelRow = $"{sep}{"No.",5}{sep,2}{"Player name",15}{sep,5}{"Date",11}{sep,8}{"Time",5}{sep,2}{"Capital",15}{sep,10}";
+        const int maxLBSize = 20;
+        const string topRow = "╔══════╦═══════════════════╦══════════════════╦══════╦════════════════════════╗";
+        const string middleRow = "╠══════╬═══════════════════╬══════════════════╬══════╬════════════════════════╣";
+        const string bottomRow = "╚══════╩═══════════════════╩══════════════════╩══════╩════════════════════════╝";
+        const string sep = "║";
+        static string labelRow = $"{sep}{"No.",5}{sep,2}{"Player name",15}{sep,5}{"Date",11}{sep,8}{"Time",5}{sep,2}{"Capital",15}{sep,10}";
         
         public static List<List<string>> leaderboard { get; set; }
         public Leaderboard()
@@ -20,7 +21,7 @@ namespace Hangman
             ReadHSFromFile();
         }
 
-        private void ReadHSFromFile()
+        void ReadHSFromFile()
         {
             
             var lines = Program.ReadFrom(Program.highscoreFile);
@@ -31,7 +32,7 @@ namespace Hangman
             }
         }
         
-        private static void SaveHSToFile()
+        static void SaveHSToFile()
         {
             using (var writer = File.CreateText(Program.highscoreFile))
             {
@@ -46,12 +47,13 @@ namespace Hangman
         {
             leaderboard.Add(new List<string>() { name, $"{startTime:g}", $"{gameTime}", capital });
             leaderboard = leaderboard.OrderBy(row => row[2]).ThenByDescending(row => row[3].Length).ToList();
-            if (leaderboard.Count > 20)
+            if (leaderboard.Count > maxLBSize)
             {
                 leaderboard.RemoveAt(leaderboard.Count - 1);
             }
             SaveHSToFile();
         }
+        
         public static void ShowLeaderboard(int size = 10)
         {
             

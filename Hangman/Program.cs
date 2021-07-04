@@ -7,8 +7,9 @@ namespace Hangman
 {
     class Program
     {
+        public static List<string> wordsPairs = new List<string>();
         public const string highscoreFile = "highscore.txt";
-        private static string[] gallows = {
+        static string[] gallows = {
             @" ╔═╤═══╤ ",
             @" ║/    │ ",
             @" ║     Ö ",
@@ -16,26 +17,30 @@ namespace Hangman
             @" ║    / \",
             @"/║\      ",
         };
+        static bool done = false;
         
         static void Main(string[] args)
         {
+            string wordDictFile = args.Length > 0 ? args[0] : "countries_and_capitals.txt";
+            
             string playerName = "Player";
-            bool done = false;
+            wordsPairs = LoadWordsFromFile(wordDictFile);
             new Leaderboard();
             
-            do {
+            while (!done) 
+            {
                 DisplayWelcomeScreen(playerName);
                 var key = GetInputKey();
                 if (key == '1')
                     playerName = ChangeName();
                 else if (key == '2')
-                    new PlayGame(playerName);
+                    new NewGame(playerName);
                 else if (key == '3')
                     ViewLeaderboard();
                 else if (key == 'x' || key == 'X')
                     done = true;
                 
-            } while (!done);
+            }
         }
         
         static void ViewLeaderboard()
@@ -64,16 +69,14 @@ namespace Hangman
         {
             string line;
             var lines = new List<string>();
-            if (!File.Exists(file))
+            if (File.Exists(file))
             {
-                File.CreateText(file);
-                return lines;
-            }
-            using (var reader = File.OpenText(file))
-            {
-                while ((line = reader.ReadLine()) != null)
+                using (var reader = File.OpenText(file))
                 {
-                    lines.Add(line);
+                    while ((line = reader.ReadLine()) != null)
+                    {
+                        lines.Add(line);
+                    }
                 }
             }
             return lines;
@@ -98,5 +101,24 @@ namespace Hangman
             Console.WriteLine($"X - To Exit{gallows[5],41}\n");
         }
         
+        static List<string> LoadWordsFromFile(string file)
+        {
+            var words = new List<string>();
+            if (!File.Exists(file))
+            {
+                var exeName = System.AppDomain.CurrentDomain.FriendlyName;
+                Console.WriteLine($"Dictionary file \"{file}\" not found.");
+                Console.WriteLine($"Make sure the file is in same folder as {exeName}.exe");
+                Console.WriteLine($"Or You can load own word dictionary file using: \"{exeName}.exe dictionary_file.txt\"");
+                Console.WriteLine("Example structure of dictionary file:");
+                Console.WriteLine("hint_word1 | guess_word1\nhint_word2 | guess_word2");
+                done = true;
+            }
+            else
+            {
+                words = ReadFrom(file);
+            }
+            return words;
+        }
     }
 }
