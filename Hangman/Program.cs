@@ -1,16 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using static System.Math;
 
 namespace Hangman
 {
     class Program
     {
-        private const string topRow = "╔══════╦═══════════════════╦══════════════════╦══════╦════════════════════════╗";
-        private const string middleRow = "╠══════╬═══════════════════╬══════════════════╬══════╬════════════════════════╣";
-        private const string bottomRow = "╚══════╩═══════════════════╩══════════════════╩══════╩════════════════════════╝";
-        private const string sep = "║";
-        private static string labelRow = $"{sep}{"No.",5}{sep,2}{"Player name",15}{sep,5}{"Date",11}{sep,8}{"Time",5}{sep,2}{"Capital",15}{sep,10}";
         private static string[] gallows = {
             @" ╔═╤═══╤ ",
             @" ║/    │ ",
@@ -24,6 +20,7 @@ namespace Hangman
         {
             string playerName = "Player";
             bool done = false;
+            new Leaderboard();
             
             do {
                 DisplayWelcomeScreen(playerName);
@@ -33,11 +30,16 @@ namespace Hangman
                 else if (key == '2')
                     new PlayGame(playerName);
                 else if (key == '3')
-                    ShowLeaderboard();
+                    ViewLeaderboard();
                 else if (key == 'x' || key == 'X')
                     done = true;
                 
             } while (!done);
+        }
+        
+        static void ViewLeaderboard()
+        {
+            
         }
         
         static string ChangeName()
@@ -46,10 +48,7 @@ namespace Hangman
             return Console.ReadLine();
         }
         
-        static void ShowLeaderboard()
-        {
-            
-        }
+        
         public static char GetInputKey()
         {
             var key = Console.ReadKey(true);
@@ -60,6 +59,11 @@ namespace Hangman
         {
             string line;
             var lines = new List<string>();
+            if (!File.Exists(file))
+            {
+                File.CreateText(file);
+                return lines;
+            }
             using (var reader = File.OpenText(file))
             {
                 while ((line = reader.ReadLine()) != null)
@@ -72,18 +76,15 @@ namespace Hangman
         
         static void DisplayWelcomeScreen(string player)
         {
-            // var top3 = ReadFrom("highscore.txt");
             Console.Clear();
             Console.WriteLine($"{"Hangman",43}");
             Console.WriteLine($"{"Game written by Ania",49}\n");
             
-            Console.WriteLine($"{"Top 3 games",45}");
-            Console.WriteLine(topRow);
-            Console.WriteLine(labelRow);
-            Console.WriteLine(middleRow);
-            // for (int i = 0; i < top3.Count; i++)
-            Console.WriteLine(bottomRow);
-            
+            if (File.Exists("highscore.txt"))
+            {
+                Console.WriteLine($"{"Top 3 games",45}");
+                Leaderboard.ShowLeaderboard(3);
+            }
             Console.WriteLine($"\nWelcome {player,-35}{gallows[0]}");
             Console.WriteLine($"Press:{gallows[1],46}");
             Console.WriteLine($"1 - To change name{gallows[2],34}");

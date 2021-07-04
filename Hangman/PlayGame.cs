@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
+
 
 namespace Hangman
 {
@@ -13,6 +13,7 @@ namespace Hangman
         private string playerName { get; }
         private int playerLife { get; set; }
         private DateTime startTime { get; }
+        private int gameTime { get; set; }
         private List<char> guessed { get; set; }
         private List<char> wrongLetters { get; set; }
         private string lastGuess { get; set; }
@@ -35,6 +36,7 @@ namespace Hangman
             this.capital = pair[1];
             this.playerName = name;
             this.playerLife = 6;
+            this.startTime = DateTime.Now;
             this.guessed = Enumerable.Repeat('_', this.capital.Length).ToList();
             this.wrongLetters = new List<char>();
             this.lastGuess = "";
@@ -61,16 +63,13 @@ namespace Hangman
             } while (this.playerLife > 0 && !this.win);
             if (this.win)
             {
-                UpdateLeaderboard();
+                this.gameTime = ((int)(DateTime.Now - this.startTime).TotalSeconds);
+                Leaderboard.UpdateLeaderboard(this.playerName, this.startTime, this.gameTime, this.capital);
             }
             this.done = true;
             DisplayGameScreen();
         }
         
-        private void UpdateLeaderboard()
-        {
-            
-        }
         
         private void GuessLetter(char letter)
         {
@@ -165,6 +164,7 @@ namespace Hangman
             else
             {
                 DisplaySummary();
+                Leaderboard.ShowLeaderboard();
             }
         }
         
@@ -172,9 +172,8 @@ namespace Hangman
         {
             if (this.win)
             {
-                DateTime finishTime = DateTime.Now;
                 Console.WriteLine($"\n{"Congratulation! You won!", 52}\n");
-                Console.WriteLine($"You guesses the capital after {this.guessCount} guesses. It took you {finishTime - this.startTime} seconds.");
+                Console.WriteLine($"You guesses the capital after {this.guessCount} guesses. It took you {this.gameTime} seconds.");
             }
             else
             {
@@ -182,7 +181,7 @@ namespace Hangman
                 Console.WriteLine($"{"Better luck next time!",50}\n");
             }
             Console.WriteLine($"The city {this.capital} is capital of {this.country}\n");
-            // Program.ShowLeaderboard();
+            Leaderboard.ShowLeaderboard();
             Console.Write("Press any key to return to main menu...");
             Console.ReadKey(false);
         }
